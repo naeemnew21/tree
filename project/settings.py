@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'tree.apps.TreeConfig',
 
+    'rest_framework',
+    
     #django apps
     'django.contrib.admin',
     'django.contrib.auth',

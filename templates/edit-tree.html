@@ -1,0 +1,391 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tree</title>
+
+<script src="{% static 'jquery-3.5.1.min.js' %}"></script>
+</head>
+<body>
+
+<style>
+
+/*----------------genealogy-scroll----------*/
+
+.genealogy-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+}
+.genealogy-scroll::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #e4e4e4;
+}
+.genealogy-scroll::-webkit-scrollbar-thumb {
+    background: #212121;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+.genealogy-scroll::-webkit-scrollbar-thumb:hover {
+    background: #d5b14c;
+    transition: 0.5s;
+}
+
+
+/*----------------genealogy-tree----------*/
+.genealogy-body{
+    white-space: nowrap;
+    overflow-y: hidden;
+    padding: 50px;
+    min-height: 500px;
+    padding-top: 200px;
+    text-align: center;
+}
+.genealogy-tree{
+  display: inline-block;
+}
+.genealogy-tree ul {
+    padding-top: 20px; 
+    position: relative;
+    padding-left: 0px;
+    display: flex;
+    justify-content: center;
+}
+.genealogy-tree li {
+    float: left; text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 20px 5px 0 5px;
+}
+.genealogy-tree li::before, .genealogy-tree li::after{
+    content: '';
+    position: absolute; 
+    top: 0; 
+    right: 50%;
+    border-top: 2px solid #ccc;
+    width: 50%; 
+  height: 18px;
+}
+.genealogy-tree li::after{
+    right: auto; left: 50%;
+    border-left: 2px solid #ccc;
+}
+.genealogy-tree li:only-child::after, .genealogy-tree li:only-child::before {
+    display: none;
+}
+.genealogy-tree li:only-child{ 
+    padding-top: 0;
+}
+.genealogy-tree li:first-child::before, .genealogy-tree li:last-child::after{
+    border: 0 none;
+}
+.genealogy-tree li:last-child::before{
+    border-right: 2px solid #ccc;
+    border-radius: 0 5px 0 0;
+    -webkit-border-radius: 0 5px 0 0;
+    -moz-border-radius: 0 5px 0 0;
+}
+.genealogy-tree li:first-child::after{
+    border-radius: 5px 0 0 0;
+    -webkit-border-radius: 5px 0 0 0;
+    -moz-border-radius: 5px 0 0 0;
+}
+.genealogy-tree ul ul::before{
+    content: '';
+    position: absolute; top: 0; left: 50%;
+    border-left: 2px solid #ccc;
+    width: 0; height: 20px;
+}
+.genealogy-tree li a{
+    text-decoration: none;
+    color: #666;
+    font-family: arial, verdana, tahoma;
+    font-size: 11px;
+    display: inline-block;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+.genealogy-tree li a:hover+ul li::after, 
+.genealogy-tree li a:hover+ul li::before, 
+.genealogy-tree li a:hover+ul::before, 
+.genealogy-tree li a:hover+ul ul::before{
+    border-color:  #fbba00;
+}
+
+/*--------------memeber-card-design----------*/
+.member-view-box{
+    padding:0px 20px;
+    text-align: center;
+    border-radius: 4px;
+    position: relative;
+}
+.member-image{
+    width: 60px;
+    position: relative;
+}
+.member-image img{
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+  background-color :#000;
+  z-index: 2;
+}
+
+
+ header {
+    background: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
+ }
+ 
+
+ * {
+    box-sizing: border-box;
+  }
+ .columnform {
+    float: left;
+    width: 50%;
+    padding: 10px;
+  }
+
+
+ input[type=text] {
+    width: 100%;
+    padding: 4px 20px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type=button] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 20px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  input[type=button]:hover {
+    background-color: #45a049;
+  }
+  
+  .editbox {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+ 
+
+</style>
+
+<header >
+    <div>
+        <div class="columnform editbox">
+            <form>
+                <input type="text" id="name-update" name="name" placeholder="name..">
+                <input type="text" id="fname-update" name="fname" placeholder="full name..">
+                <input type="text" id="url-update" name="url" placeholder="url..">
+                <input type="hidden" id="pk-update" name="pk-update">
+                <input type="button" value="update data" onclick="update_branch(this)">
+          </form>
+        </div>
+        <div class="columnform editbox">
+            <form>
+                <input type="text" id="name-add" name="name" placeholder="name..">
+                <input type="text" id="fname-add" name="fname" placeholder="full name..">
+                <input type="text" id="url-add" name="url" placeholder="url..">
+                <input type="hidden" id="parent-pk" name="parent-pk">
+                <input type="button" value="add branch" onclick="create_branch(this)">
+          </form>
+        </div>
+    </div>
+</header>
+
+
+<div class="body genealogy-body genealogy-scroll">
+    <div class="genealogy-tree">
+        <ul>
+            <li id="li-{{root.pk}}">
+                <a href="javascript:void(0);" onclick="show_data(this)" id="{{root.pk}}">
+                    <div class="member-view-box">
+                        <div class="member-details">
+                            <h3 id="branch-name-{{root.pk}}">{{root.name}}</h3>
+                            <input type="hidden" id="name-{{root.pk}}" name="name" value="{{root.name}}">
+                            <input type="hidden" id="fname-{{root.pk}}" name="fname" value="{{root.fname}}">
+                            <input type="hidden" id="url-{{root.pk}}" name="url" value="{{root.url}}">
+                        </div>
+                            
+                    </div>
+                </a>
+
+                {% if root.person_set.all %}
+                    <ul id="branch-id-{{root.pk}}">
+                    {%for node in root.person_set.all %} 
+                        {%include "tree.html" %}
+                    {%endfor%}
+                    </ul>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    {% comment %} $(function () {
+        $('.genealogy-tree ul').hide();
+        $('.genealogy-tree>ul').show();
+        $('.genealogy-tree ul.active').show();
+        $('.genealogy-tree li').on('click', function (e) {
+            var children = $(this).find('> ul');
+            if (children.is(":visible")) children.hide('fast').removeClass('active');
+            else children.show('fast').addClass('active');
+            e.stopPropagation();
+        });
+    }); {% endcomment %}
+    
+    function show_data(element)
+    {
+        pk = element.id;
+        let name = document.getElementById('name-'+ pk).value;
+        let fname = document.getElementById('fname-'+ pk).value;
+        let url = document.getElementById('url-'+ pk).value;
+        
+        document.getElementById("name-update").value = name;
+        document.getElementById("fname-update").value = fname;
+        document.getElementById("url-update").value = url;
+        document.getElementById("pk-update").value = pk;
+        document.getElementById("parent-pk").value = pk;
+        
+    }
+
+
+    function update_branch(element)
+    {
+        let data = {};
+        data['name']  = document.getElementById("name-update").value;
+        data['fname']  = document.getElementById("fname-update").value;
+        data['url']  = document.getElementById("url-update").value;
+        let pk =document.getElementById("pk-update").value;
+
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("PUT", "/branch-update/"+pk, true);
+        const csrftoken = getCookie('csrftoken');
+        xhttp.setRequestHeader('x-csrftoken', csrftoken)
+        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+        xhttp.setRequestHeader('Accept', 'application/json')
+
+        xhttp.onreadystatechange = function()
+        {
+          if (this.readyState == 4 && this.status == 200)
+          {
+            response = JSON.parse(this.responseText)
+            
+            document.getElementById("branch-name-"+pk).innerHTML = response.name;
+            document.getElementById("name-"+pk).value = response.name;
+            document.getElementById("fname-"+pk).value = response.fname;
+            document.getElementById("url-"+pk).value = response.url;
+          }
+        }
+        
+        xhttp.send(JSON.stringify(data));   
+    }
+
+
+
+
+    function draw_branch(response, parent){
+        let htmltext =  '<li id="li-'+response.id+'>'+
+                '    <a href="javascript:void(0);" onclick="show_data(this)" id="'+response.id+'">'+
+                '        <div class="member-view-box">'+
+                '                <div class="member-details">'+
+                '                    <h3 id="branch-name-'+response.id+'">'+response.name+'('+parent+')'+'</h3>'+
+                '                    <input type="hidden" id="name-'+response.id+'" name="name" value="'+response.name+'">'+
+                '                    <input type="hidden" id="fname-'+response.id+'" name="fname" value="'+response.fname+'">'+
+                '                    <input type="hidden" id="url-'+response.id+'" name="url" value="'+response.url+'">'+
+                '                </div>'+
+                '        </div>'+
+                '    </a>'+
+                '</li>'
+        
+        return htmltext;
+    }
+
+
+    function create_branch(element)
+    {
+        let data = {};
+        data['name']  = document.getElementById("name-add").value;
+        data['fname']  = document.getElementById("fname-add").value;
+        data['url']  = document.getElementById("url-add").value;
+        data['parent']  = document.getElementById("parent-pk").value;
+        
+
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/branch-create", true);
+        const csrftoken = getCookie('csrftoken');
+        xhttp.setRequestHeader('x-csrftoken', csrftoken)
+        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+        xhttp.setRequestHeader('Accept', 'application/json')
+
+        xhttp.onreadystatechange = function()
+        {
+          if (this.readyState == 4 && this.status == 201)
+          {
+            response = JSON.parse(this.responseText)
+
+            parent = document.getElementById("parent-pk").value;
+            new_branch = draw_branch(response, parent);
+
+            if (document.getElementById('branch-id-'+ pk)){
+                document.getElementById('branch-id-'+ pk).innerHTML += new_branch;
+            } else {
+                document.getElementById("li-"+pk).innerHTML += '<ul id="branch-id-'+parent+
+                                                    '>'+
+                                                        new_branch +
+                                                        '</ul>';
+            }
+            
+            
+          }
+        }
+        
+        xhttp.send(JSON.stringify(data));   
+
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+
+</script>
+
+
+</body>
+</html>
