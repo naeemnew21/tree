@@ -47,7 +47,7 @@
   display: inline-block;
 }
 .genealogy-tree ul {
-    padding-top: 20px; 
+    padding-top: 20px;
     position: relative;
     padding-left: 0px;
     display: flex;
@@ -61,11 +61,11 @@
 }
 .genealogy-tree li::before, .genealogy-tree li::after{
     content: '';
-    position: absolute; 
-    top: 0; 
+    position: absolute;
+    top: 0;
     right: 50%;
     border-top: 2px solid #ccc;
-    width: 50%; 
+    width: 50%;
   height: 18px;
 }
 .genealogy-tree li::after{
@@ -75,7 +75,7 @@
 .genealogy-tree li:only-child::after, .genealogy-tree li:only-child::before {
     display: none;
 }
-.genealogy-tree li:only-child{ 
+.genealogy-tree li:only-child{
     padding-top: 0;
 }
 .genealogy-tree li:first-child::before, .genealogy-tree li:last-child::after{
@@ -109,9 +109,9 @@
     -moz-border-radius: 5px;
 }
 
-.genealogy-tree li a:hover+ul li::after, 
-.genealogy-tree li a:hover+ul li::before, 
-.genealogy-tree li a:hover+ul::before, 
+.genealogy-tree li a:hover+ul li::after,
+.genealogy-tree li a:hover+ul li::before,
+.genealogy-tree li a:hover+ul::before,
 .genealogy-tree li a:hover+ul ul::before{
     border-color:  #fbba00;
 }
@@ -145,7 +145,7 @@
     z-index: 1;
     box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
  }
- 
+
 
  * {
     box-sizing: border-box;
@@ -166,7 +166,7 @@
     border-radius: 4px;
     box-sizing: border-box;
   }
-  
+
   input[type=button] {
     width: 100%;
     background-color: #4CAF50;
@@ -177,17 +177,17 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
+
   input[type=button]:hover {
     background-color: #45a049;
   }
-  
+
   .editbox {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 20px;
   }
- 
+
 
 </style>
 
@@ -222,18 +222,18 @@
                 <a href="javascript:void(0);" onclick="show_data(this)" id="{{root.pk}}">
                     <div class="member-view-box">
                         <div class="member-details">
-                            <h3 id="branch-name-{{root.pk}}">{{root.name}}</h3>
+                            <h3 id="branch-name-{{root.pk}}">{{root.name}}({{root.rank}})</h3>
                             <input type="hidden" id="name-{{root.pk}}" name="name" value="{{root.name}}">
                             <input type="hidden" id="fname-{{root.pk}}" name="fname" value="{{root.fname}}">
                             <input type="hidden" id="url-{{root.pk}}" name="url" value="{{root.url}}">
                         </div>
-                            
+
                     </div>
                 </a>
 
                 {% if root.person_set.all %}
                     <ul id="branch-id-{{root.pk}}">
-                    {%for node in root.person_set.all %} 
+                    {%for node in root.person_set.all %}
                         {%include "tree.html" %}
                     {%endfor%}
                     </ul>
@@ -256,20 +256,20 @@
             e.stopPropagation();
         });
     }); {% endcomment %}
-    
+
     function show_data(element)
     {
         pk = element.id;
         let name = document.getElementById('name-'+ pk).value;
         let fname = document.getElementById('fname-'+ pk).value;
         let url = document.getElementById('url-'+ pk).value;
-        
+
         document.getElementById("name-update").value = name;
         document.getElementById("fname-update").value = fname;
         document.getElementById("url-update").value = url;
         document.getElementById("pk-update").value = pk;
         document.getElementById("parent-pk").value = pk;
-        
+
     }
 
 
@@ -293,15 +293,15 @@
           if (this.readyState == 4 && this.status == 200)
           {
             response = JSON.parse(this.responseText)
-            
+
             document.getElementById("branch-name-"+pk).innerHTML = response.name;
             document.getElementById("name-"+pk).value = response.name;
             document.getElementById("fname-"+pk).value = response.fname;
             document.getElementById("url-"+pk).value = response.url;
           }
         }
-        
-        xhttp.send(JSON.stringify(data));   
+
+        xhttp.send(JSON.stringify(data));
     }
 
 
@@ -320,7 +320,7 @@
                 '        </div>'+
                 '    </a>'+
                 '</li>'
-        
+
         return htmltext;
     }
 
@@ -332,7 +332,7 @@
         data['fname']  = document.getElementById("fname-add").value;
         data['url']  = document.getElementById("url-add").value;
         data['parent']  = document.getElementById("parent-pk").value;
-        
+
 
         let xhttp = new XMLHttpRequest();
         xhttp.open("POST", "/branch-create", true);
@@ -358,12 +358,12 @@
                                                         new_branch +
                                                         '</ul>';
             }
-            
-            
+
+
           }
         }
-        
-        xhttp.send(JSON.stringify(data));   
+
+        xhttp.send(JSON.stringify(data));
 
     }
 
@@ -382,7 +382,7 @@
         }
         return cookieValue;
     }
-    
+
 
 </script>
 
