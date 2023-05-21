@@ -227,7 +227,7 @@
 
                 {% if root.person_set.all %}
                     <ul id="branch-id-{{root.pk}}">
-                    {%for node in root.person_set.all %}
+                    {%for node in root.family_set.all %}
                         {%include "family.html" %}
                     {%endfor%}
                     </ul>

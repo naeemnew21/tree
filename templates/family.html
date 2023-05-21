@@ -12,7 +12,7 @@
     </a>
     {% if node.person_set.all %}
         <ul id="branch-id-{{node.pk}}">
-        {%for ch in node.person_set.all %}
+        {%for ch in node.family_set.all %}
             {%with node=ch template_name="family.html" %}
                 {%include template_name%}
             {%endwith%}
