@@ -1,0 +1,22 @@
+
+
+
+<li id="li-{{node.pk}}">
+    <a href="javascript:void(0);" onclick="show_data(this)" id="{{node.pk}}">
+        <div class="member-view-box">
+                <div class="member-details">
+                    <h1 style="font-size: 200%" id="branch-name-{{node.pk}}">{{node.name}}({{node.rank}})</h1>
+                    <input type="hidden" id="name-{{node.pk}}" name="name" value="{{node.get_fname}}">
+                </div>
+        </div>
+    </a>
+    {% if node.person_set.all %}
+        <ul id="branch-id-{{node.pk}}">
+        {%for ch in node.person_set.all %}
+            {%with node=ch template_name="family.html" %}
+                {%include template_name%}
+            {%endwith%}
+        {%endfor%}
+        </ul>
+    {% endif %}
+</li>
