@@ -225,7 +225,7 @@
                     </div>
                 </a>
 
-                {% if root.person_set.all %}
+                {% if root.family_set.all %}
                     <ul id="branch-id-{{root.pk}}">
                     {%for node in root.family_set.all %}
                         {%include "family.html" %}

@@ -10,7 +10,7 @@
                 </div>
         </div>
     </a>
-    {% if node.person_set.all %}
+    {% if node.family_set.all %}
         <ul id="branch-id-{{node.pk}}">
         {%for ch in node.family_set.all %}
             {%with node=ch template_name="family.html" %}
