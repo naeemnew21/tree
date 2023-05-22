@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from .models import Person, Family
+from .models import Person, Family, Hist, Log_Info
 from django.contrib.gis.geoip2 import GeoIP2
+from django.contrib.auth.decorators import user_passes_test
 
 def get_info(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -42,11 +43,17 @@ def get_info(request):
         "location_country": location_country,
         "location_city": location_city
     }
+    date = Hist.objects.create()
+    log, created = Log_Info.objects.get_or_create(**context)
+    log.history.add(date)
     return context
 
 
 def index(request):
-    info = get_info(request)
+    try:
+        get_info(request)
+    except:
+        pass
     qs = Person.objects.all()
     if qs:
         ctx = {'root' : qs[0]}
@@ -59,12 +66,31 @@ def index(request):
 
 
 def naeem(request):
-    info = get_info(request)
+    try:
+        get_info(request)
+    except:
+        pass
     qs = Family.objects.all()
     if qs:
-        ctx = {'root' : qs[0], 'info':info}
+        ctx = {'root' : qs[0]}
     else:
         ctx = {'root' : ''}
     if request.user.is_authenticated and request.user.is_superuser:
         return render(request, 'naeem-edit.html', context=ctx)
     return render(request, 'naeem.html', context=ctx)
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser and user.username == "admin"
+
+
+
+@user_passes_test(is_admin, login_url='/admin' )
+def log_history(request):
+    ctx = dict()
+    info = get_info(request)
+    qs = Log_Info.objects.all()
+    ctx['logs'] = qs
+    ctx.update(info)
+    return render(request, 'log.html', ctx)
+

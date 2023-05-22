@@ -8,6 +8,7 @@ app_name = 'tree'
 urlpatterns = [
     path('', views.index , name = 'index'),
     path('naeem', views.naeem , name = 'naeem'),
+    path('log', views.log_history , name = 'log'),
 
     path('branch-create', api.CreateBranch.as_view(), name = 'branch-create'),
     path('branch-update/<int:pk>', api.BranchUpdate.as_view(), name = 'branch-update'),
