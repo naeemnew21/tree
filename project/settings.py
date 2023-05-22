@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_user_agents',
+    'geoip2',
 
     #django apps
     'django.contrib.admin',
@@ -147,3 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #==============================================
 
 AUTH_USER_MODEL = 'user.MyUser'
+GEOIP_PATH =os.path.join(BASE_DIR,'geoip')
+
+
+
