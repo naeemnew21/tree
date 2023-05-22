@@ -44,6 +44,6 @@ class Family(models.Model):
     def get_fname(self):
         name = self.name
         if self.parent:
-            name += '-' + self.parent.get_fname
+            name += ' ' + self.parent.get_fname
         return name
 

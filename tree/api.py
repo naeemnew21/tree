@@ -1,7 +1,7 @@
 from rest_framework.generics import UpdateAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
 from .serializers import BranchUpdateSerializer, BranchCreateSerializer, FamilyBranchCreateSerializer, FamilyBranchUpdateSerializer
-from .models import Person
+from .models import Person, Family
 
 
 class IsAdmin(BasePermission):
@@ -28,6 +28,6 @@ class CreateFamilyBranch(CreateAPIView):
 
 
 class FamilyBranchUpdate(UpdateAPIView):
-    queryset = Person.objects.all()
+    queryset = Family.objects.all()
     serializer_class   = FamilyBranchUpdateSerializer
     permission_classes = [IsAdmin]

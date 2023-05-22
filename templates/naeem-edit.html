@@ -218,8 +218,8 @@
                 <a href="javascript:void(0);" onclick="show_data(this)" id="{{root.pk}}">
                     <div class="member-view-box">
                         <div class="member-details">
-                            <h3 id="branch-name-{{root.pk}}">{{root.name}}({{root.rank}})</h3>
-                            <input type="hidden" id="name-{{root.pk}}" name="name" value="{{root.get_fname}}">
+                            <h1>{{info}}</h1>
+                            <h1 id="branch-name-{{root.pk}}">{{root.name}}</h1>
                         </div>
 
                     </div>
@@ -254,7 +254,7 @@
     function show_data(element)
     {
         pk = element.id;
-        let name = document.getElementById('name-'+ pk).value;
+        let name = document.getElementById('branch-name-'+ pk).innerHTML;
 
         document.getElementById("name-update").value = name;
         document.getElementById("pk-update").value = pk;
@@ -283,7 +283,6 @@
             response = JSON.parse(this.responseText)
 
             document.getElementById("branch-name-"+pk).innerHTML = response.name;
-            document.getElementById("name-"+pk).value = response.name;
           }
         }
 
@@ -299,7 +298,6 @@
                 '        <div class="member-view-box">'+
                 '                <div class="member-details">'+
                 '                    <h3 id="branch-name-'+response.id+'">'+response.name+'('+parent+')'+'</h3>'+
-                '                    <input type="hidden" id="name-'+response.id+'" name="name" value="'+response.get_fname+'">'+
                 '                </div>'+
                 '        </div>'+
                 '    </a>'+

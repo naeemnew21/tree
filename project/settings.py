@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'tree.apps.TreeConfig',
 
     'rest_framework',
-    
+    'django_user_agents',
+
     #django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
