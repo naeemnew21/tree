@@ -149,6 +149,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.MyUser'
 GEOIP_PATH =os.path.join(BASE_DIR,'geoip')
-
+# geoip2 license key: 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
 
 

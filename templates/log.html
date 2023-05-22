@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Log</title>
 </head>
 <body>
     <h1>Log History!</h1>
@@ -15,26 +15,24 @@
         <li>Browser: {{browser_type}} {{browser_version}}</li>
         <li>OS: {{os_type}} {{os_version}}</li>
     </ul>
-    
+
     {%for log in logs %}
-    
+
         <hr>
         <ul>
             <li>IP Address : {{log.ip}}</li>
             <li>Device: {{ log.device_type}}</li>
             <li>Browser: {{log.browser_type}} {{log.browser_version}}</li>
             <li>OS: {{log.os_type}} {{log.os_version}}</li>
-            <li>country: {{log.location_country}}</li>
-            <li>city: {{log.location_city}}</li>
-            <li>No: {{log.history.all|length}}</li>
+            <li>address: {{log.location_country}} ({{log.location_city}})</li>
+            <li>No: {{log.history.all|length}}
                 {% with log.history.all|dictsortreversed:"date"|first as last_ap %}
-                    <ul>
-                        <li>{{last_ap.date}}</li>
-                    </ul>
+                        (last: {{last_ap.date}})
                 {% endwith %}
+            </li>
         </ul>
-        
+
     {%endfor%}
-    
+
 </body>
 </html>

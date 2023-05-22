@@ -3,6 +3,8 @@ from .models import Person, Family, Hist, Log_Info
 from django.contrib.gis.geoip2 import GeoIP2
 from django.contrib.auth.decorators import user_passes_test
 
+
+
 def get_info(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -26,6 +28,7 @@ def get_info(request):
     browser_version = request.user_agent.browser.version_string
     os_type = request.user_agent.os.family
     os_version = request.user_agent.os.version_string
+
 
     g = GeoIP2()
     location = g.city(ip)
@@ -88,7 +91,10 @@ def is_admin(user):
 @user_passes_test(is_admin, login_url='/admin' )
 def log_history(request):
     ctx = dict()
-    info = get_info(request)
+    try:
+        info = get_info(request)
+    except:
+        info = dict()
     qs = Log_Info.objects.all()
     ctx['logs'] = qs
     ctx.update(info)
